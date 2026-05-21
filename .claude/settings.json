@@ -1,8 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(powershell -Command \"Remove-Item -Path ''C:\\\\Projects\\\\Web_Applications\\\\finedge_tracker\\\\backend'' -Recurse -Force\")",
-      "Bash(cmd /c \"rd /s /q C:\\\\Projects\\\\Web_Applications\\\\finedge_tracker\\\\backend\")"
-    ]
-  }
-}
