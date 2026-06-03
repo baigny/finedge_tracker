@@ -1,4 +1,5 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
+import { getHealth } from "../controllers/health.controller";
 
 const router = Router();
 
@@ -12,12 +13,6 @@ const router = Router();
  *       200:
  *         description: Server is healthy
  */
-router.get("/", (req: Request, res: Response) => {
-  res.status(200).json({
-    status: "ok",
-    message: "FinEdge API is running",
-    timestamp: new Date().toISOString(),
-  });
-});
+router.get("/", getHealth);
 
 export default router;
