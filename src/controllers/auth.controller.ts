@@ -1,62 +1,61 @@
+import { Request, Response } from "express";
 import userModel from "../models/user.model";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { UnauthorizedError, ConflictError } from "../utils/errors";
 
-async function RegisterUser(req: any, res: any) {
-    const { name, password, email, age, gender } = req.body;
+const SALT_ROUNDS = 10;
 
-    const newUser = new userModel({
-        name, password, email, age, gender
-    });
+async function RegisterUser(req: Request, res: Response) {
+  const { name, password, email, age, gender } = req.body;
 
-    try {
-        const responsefromDB = await newUser.save();
+  // Check if user already exists
+  const existingUser = await userModel.findOne({ email });
+  if (existingUser) {
+    throw new ConflictError("User with this email already exists");
+  }
 
-        res.status(201).json({
-            success: "true",
-            message: "User Registered Successfully",
-            data: responsefromDB
-        });
-    } catch (error: any) {
-        res.status(500).json({
-            success: "false",
-            message: "Error Registering User",
-            error: error.message
-        });
-    }
+  // Hash password before saving
+  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+
+  const newUser = new userModel({ name, password: hashedPassword, email, age, gender });
+  const responsefromDB = await newUser.save();
+
+  res.status(201).json({
+    success: "true",
+    message: "User Registered Successfully",
+    data: responsefromDB,
+  });
 }
 
-async function loginUser(req: any, res: any) {
-    const { email, password } = req.body;
+async function loginUser(req: Request, res: Response) {
+  const { email, password } = req.body;
 
-    const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email });
 
-    if (!user) {
-        res.status(401).json({
-            success: "false",
-            message: "Invalid User Credentials"
-        });
-    } else {
-        if (user.password === password) {
-            const jwtSecret = process.env.JWT_SECRET as string;
-            const token = jwt.sign(
-                { userId: user._id, email: user.email },
-                jwtSecret,
-                { expiresIn: "1h" }
-            );
+  if (!user) {
+    throw new UnauthorizedError("Invalid User Credentials");
+  }
 
-            res.status(200).json({
-                success: "true",
-                message: "login successful",
-                data: user,
-                token: token
-            });
-        } else {
-            res.status(401).json({
-                success: "false",
-                message: "Invalid User Credentials",
-            });
-        }
-    }
+  // Compare plain password with hashed password
+  const isMatch = await bcrypt.compare(password, user.password);
+  if (!isMatch) {
+    throw new UnauthorizedError("Invalid User Credentials");
+  }
+
+  const jwtSecret = process.env.JWT_SECRET as string;
+  const token = jwt.sign(
+    { userId: user._id, email: user.email },
+    jwtSecret,
+    { expiresIn: "1h" }
+  );
+
+  res.status(200).json({
+    success: "true",
+    message: "login successful",
+    data: user,
+    token: token,
+  });
 }
 
 export { loginUser, RegisterUser };
