@@ -52,7 +52,7 @@ describe("GET /summary", () => {
       .send({ type: "income", category: "salary", amount: 5000, date: "2024-01-15" });
     await request(app)
       .post("/transactions")
-      .send({ type: "expense", category: "rent", amount: 1500, date: "2024-01-16" });
+      .send({ type: "expense", category: "utilities", amount: 1500, date: "2024-01-16" });
     await request(app)
       .post("/transactions")
       .send({ type: "expense", category: "food", amount: 300, date: "2024-01-17" });
