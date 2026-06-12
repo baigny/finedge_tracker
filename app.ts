@@ -4,6 +4,8 @@ import swaggerSpec from "./src/config/swagger";
 import healthRouter from "./src/routes/health.routes";
 import authRouter from "./src/routes/auth.routes";
 import transactionRouter from "./src/routes/transaction.routes";
+import budgetRouter from "./src/routes/budget.routes";
+import summaryRouter from "./src/routes/summary.routes";
 
 const app = express();
 
@@ -12,5 +14,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/health", healthRouter);
 app.use("/", authRouter);
 app.use("/transactions", transactionRouter);
+app.use("/budget", budgetRouter);
+app.use("/summary", summaryRouter);
 
 export default app;
