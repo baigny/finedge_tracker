@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import * as transactionService from "../services/transaction.service";
 
 export const createTransaction = async (req: any, res: any) => {
@@ -5,6 +6,9 @@ export const createTransaction = async (req: any, res: any) => {
     const transaction = await transactionService.createTransaction(req.body);
     res.status(201).json({ success: true, message: "Transaction created", data: transaction });
   } catch (error: any) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 };
@@ -38,6 +42,9 @@ export const updateTransaction = async (req: any, res: any) => {
     }
     res.status(200).json({ success: true, message: "Transaction updated", data: transaction });
   } catch (error: any) {
+    if (error instanceof mongoose.Error.ValidationError) {
+      return res.status(400).json({ success: false, message: error.message });
+    }
     res.status(500).json({ success: false, message: error.message });
   }
 };
