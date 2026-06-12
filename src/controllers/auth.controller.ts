@@ -1,40 +1,36 @@
+import { Request, Response } from "express";
 import userModel from "../models/user.model";
 import jwt from "jsonwebtoken";
 
-async function RegisterUser(req: any, res: any) {
+async function registerUser(req: Request, res: Response) {
     const { name, password, email, age, gender } = req.body;
 
-    const newUser = new userModel({
-        name, password, email, age, gender
-    });
+    const newUser = new userModel({ name, password, email, age, gender });
 
     try {
         const responsefromDB = await newUser.save();
 
         res.status(201).json({
-            success: "true",
+            success: true,
             message: "User Registered Successfully",
             data: responsefromDB
         });
     } catch (error: any) {
         res.status(500).json({
-            success: "false",
+            success: false,
             message: "Error Registering User",
             error: error.message
         });
     }
 }
 
-async function loginUser(req: any, res: any) {
+async function loginUser(req: Request, res: Response) {
     const { email, password } = req.body;
 
     const user = await userModel.findOne({ email });
 
     if (!user) {
-        res.status(401).json({
-            success: "false",
-            message: "Invalid User Credentials"
-        });
+        res.status(401).json({ success: false, message: "Invalid User Credentials" });
     } else {
         if (user.password === password) {
             const jwtSecret = process.env.JWT_SECRET as string;
@@ -45,18 +41,15 @@ async function loginUser(req: any, res: any) {
             );
 
             res.status(200).json({
-                success: "true",
-                message: "login successful",
+                success: true,
+                message: "Login successful",
                 data: user,
-                token: token
+                token
             });
         } else {
-            res.status(401).json({
-                success: "false",
-                message: "Invalid User Credentials",
-            });
+            res.status(401).json({ success: false, message: "Invalid User Credentials" });
         }
     }
 }
 
-export { loginUser, RegisterUser };
+export { loginUser, registerUser };
