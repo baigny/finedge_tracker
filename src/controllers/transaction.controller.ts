@@ -3,12 +3,13 @@ import * as transactionService from "../services/transaction.service";
 import { NotFoundError } from "../utils/errors";
 
 export const createTransaction = async (req: Request, res: Response) => {
-  const transaction = await transactionService.createTransaction(req.body);
+  const data = { ...req.body, userId: req.userId };
+  const transaction = await transactionService.createTransaction(data);
   res.status(201).json({ success: true, message: "Transaction created", data: transaction });
 };
 
-export const getAllTransactions = async (_req: Request, res: Response) => {
-  const transactions = await transactionService.getAllTransactions();
+export const getAllTransactions = async (req: Request, res: Response) => {
+  const transactions = await transactionService.getAllTransactions(req.userId as string);
   res.status(200).json({ success: true, data: transactions });
 };
 
