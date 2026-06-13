@@ -8,6 +8,7 @@ import summaryRouter from "./src/routes/summary.routes";
 import budgetRouter from "./src/routes/budget.routes";
 import logger from "./src/middlewares/logger.middleware";
 import errorHandler from "./src/middlewares/error.middleware";
+import authenticate from "./src/middlewares/auth.middleware";
 
 const app = express();
 
@@ -16,9 +17,11 @@ app.use(logger);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/health", healthRouter);
 app.use("/", authRouter);
-app.use("/transactions", transactionRouter);
-app.use("/summary", summaryRouter);
-app.use("/budgets", budgetRouter);
+
+// Protected routes — require valid JWT token
+app.use("/transactions", authenticate, transactionRouter);
+app.use("/summary", authenticate, summaryRouter);
+app.use("/budgets", authenticate, budgetRouter);
 
 // Global error handler — must be LAST
 app.use(errorHandler);

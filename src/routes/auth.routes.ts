@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { loginUser, registerUser } from "../controllers/auth.controller";
 import asyncHandler from "../utils/asyncHandler";
+import validateRegistration from "../middlewares/validateRegistration.middleware";
 
 const router = Router();
 
@@ -34,7 +35,7 @@ const router = Router();
  *       409:
  *         description: User already exists
  */
-router.post("/users", asyncHandler(registerUser));
+router.post("/users", validateRegistration, asyncHandler(registerUser));
 
 /**
  * @swagger
