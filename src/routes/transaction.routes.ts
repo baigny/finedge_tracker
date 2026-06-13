@@ -5,6 +5,8 @@ import {
   getTransactionById,
   updateTransaction,
   deleteTransaction,
+  filterTransactions,
+  getMonthlyTrends,
 } from "../controllers/transaction.controller";
 import validateTransaction from "../middlewares/validateTransaction.middleware";
 import asyncHandler from "../utils/asyncHandler";
@@ -53,6 +55,9 @@ router.post("/", validateTransaction, asyncHandler(createTransaction));
  */
 router.get("/", asyncHandler(getAllTransactions));
 
+router.get("/filter", asyncHandler(filterTransactions));
+
+router.get("/trends", asyncHandler(getMonthlyTrends));
 /**
  * @swagger
  * /transactions/{id}:

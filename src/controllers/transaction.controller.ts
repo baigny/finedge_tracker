@@ -40,3 +40,14 @@ export const getSummary = async (_req: Request, res: Response) => {
   const summary = await transactionService.getSummary();
   res.status(200).json({ success: true, data: summary });
 };
+
+
+export const filterTransactions = async (req: Request, res: Response) => {
+  const data = await transactionService.filterTransactions(req.query);
+  res.status(200).json({ success: true, data });
+};
+
+export const getMonthlyTrends = async (_req: Request, res: Response) => {
+  const data = await transactionService.getMonthlyTrends();
+  res.status(200).json({ success: true, data });
+};
