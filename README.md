@@ -79,15 +79,18 @@ Interactive docs are available at `http://localhost:3000/api-docs` when the serv
 }
 ```
 
+| GET | `/transactions/filter` | Filter by category and/or date range |
+| GET | `/transactions/trends` | Monthly income, expense, and balance trends |
+
 ### Budget
 
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | `/budget` | Create a monthly budget |
-| GET | `/budget` | Get all budgets |
-| GET | `/budget/:month` | Get budget for a month (e.g. `2024-01`) |
-| PATCH | `/budget/:month` | Update a budget |
-| DELETE | `/budget/:month` | Delete a budget |
+| POST | `/budgets` | Create a monthly budget |
+| GET | `/budgets` | Get all budgets |
+| GET | `/budgets/:id` | Get a budget by ID |
+| PATCH | `/budgets/:id` | Update a budget |
+| DELETE | `/budgets/:id` | Delete a budget |
 
 ### Summary
 
