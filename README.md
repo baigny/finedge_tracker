@@ -41,6 +41,10 @@ JWT_SECRET=<your_jwt_secret>
 | `npm start` | Run compiled app |
 | `npm test` | Run test suite |
 
+## Postman Collection
+
+[Open in Postman](https://universal-sunset-220568.postman.co/workspace/Exploring-APIs~4290d2d8-ca86-4d7b-a7c6-115807f58037/request/1081433-feb11122-306e-488c-991d-cceb53b70c01?action=share&creator=1081433&active-environment=1081433-7255ae90-b423-4b11-a4fe-4b5705cd7ef6)
+
 ## API Reference
 
 Interactive docs are available at `http://localhost:3000/api-docs` when the server is running.
