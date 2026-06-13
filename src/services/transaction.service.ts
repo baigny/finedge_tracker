@@ -6,8 +6,8 @@ export const createTransaction = async (data: any) => {
   return await transaction.save();
 };
 
-export const getAllTransactions = async () => {
-  return await Transaction.find();
+export const getAllTransactions = async (userId: string) => {
+  return await Transaction.find({ userId });
 };
 
 export const getTransactionById = async (id: string) => {
