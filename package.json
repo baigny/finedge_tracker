@@ -16,9 +16,9 @@
   "type": "commonjs",
   "main": "dist/server.js",
   "scripts": {
-    "start": "node dist/server.js",
-    "build": "tsc",
-    "dev": "nodemon --exec ts-node server.ts --ext ts",
+    "start": "node init && node dist/server.js",
+    "build": "node init && tsc",
+    "dev": "node init && nodemon --exec ts-node server.ts --ext ts",
     "test": "jest --runInBand --forceExit --detectOpenHandles"
   },
   "dependencies": {
