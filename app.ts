@@ -5,6 +5,7 @@ import healthRouter from "./src/routes/health.routes";
 import authRouter from "./src/routes/auth.routes";
 import transactionRouter from "./src/routes/transaction.routes";
 import summaryRouter from "./src/routes/summary.routes";
+import budgetRouter from "./src/routes/budget.routes";
 import logger from "./src/middlewares/logger.middleware";
 import errorHandler from "./src/middlewares/error.middleware";
 
@@ -17,6 +18,7 @@ app.use("/health", healthRouter);
 app.use("/", authRouter);
 app.use("/transactions", transactionRouter);
 app.use("/summary", summaryRouter);
+app.use("/budgets", budgetRouter);
 
 // Global error handler — must be LAST
 app.use(errorHandler);

@@ -119,6 +119,66 @@ describe("DELETE /transactions/:id", () => {
   });
 });
 
+// ── FILTER ──────────────────────────────────────────────────────────────────
+
+describe("GET /transactions/filter", () => {
+  beforeEach(async () => {
+    await request(app).post("/transactions").send({ type: "income", category: "salary", amount: 5000, date: "2024-01-15" });
+    await request(app).post("/transactions").send({ type: "expense", category: "food", amount: 300, date: "2024-02-10" });
+  });
+
+  it("filters by category", async () => {
+    const res = await request(app).get("/transactions/filter?category=salary");
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].category).toBe("salary");
+  });
+
+  it("filters by full date range", async () => {
+    const res = await request(app).get("/transactions/filter?startDate=2024-01-01&endDate=2024-01-31");
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].category).toBe("salary");
+  });
+
+  it("filters by startDate only", async () => {
+    const res = await request(app).get("/transactions/filter?startDate=2024-02-01");
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(1);
+    expect(res.body.data[0].category).toBe("food");
+  });
+
+  it("returns 400 for an invalid startDate", async () => {
+    const res = await request(app).get("/transactions/filter?startDate=not-a-date");
+    expect(res.status).toBe(400);
+    expect(res.body.success).toBe(false);
+  });
+});
+
+// ── TRENDS ──────────────────────────────────────────────────────────────────
+
+describe("GET /transactions/trends", () => {
+  it("returns empty array when no transactions exist", async () => {
+    const res = await request(app).get("/transactions/trends");
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(0);
+  });
+
+  it("returns monthly trend with label, income, expense, and balance", async () => {
+    await request(app).post("/transactions").send({ type: "income", category: "salary", amount: 5000, date: "2024-01-15" });
+    await request(app).post("/transactions").send({ type: "expense", category: "food", amount: 1000, date: "2024-01-20" });
+    const res = await request(app).get("/transactions/trends");
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveLength(1);
+    const trend = res.body.data[0];
+    expect(trend.label).toBe("2024-01");
+    expect(trend.income).toBe(5000);
+    expect(trend.expense).toBe(1000);
+    expect(trend.balance).toBe(4000);
+  });
+});
+
 // ── VALIDATION (400s) ───────────────────────────────────────────────────────
 
 describe("POST /transactions - validation failures", () => {
