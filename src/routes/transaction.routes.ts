@@ -55,8 +55,43 @@ router.post("/", validateTransaction, asyncHandler(createTransaction));
  */
 router.get("/", asyncHandler(getAllTransactions));
 
+/**
+ * @swagger
+ * /transactions/filter:
+ *   get:
+ *     summary: Filter transactions by category and/or date range
+ *     parameters:
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: startDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *       - in: query
+ *         name: endDate
+ *         schema:
+ *           type: string
+ *           format: date
+ *     responses:
+ *       200:
+ *         description: Filtered transactions
+ *       400:
+ *         description: Invalid date format
+ */
 router.get("/filter", asyncHandler(filterTransactions));
 
+/**
+ * @swagger
+ * /transactions/trends:
+ *   get:
+ *     summary: Get monthly income, expense, and balance trends
+ *     responses:
+ *       200:
+ *         description: Monthly trend data
+ */
 router.get("/trends", asyncHandler(getMonthlyTrends));
 /**
  * @swagger
